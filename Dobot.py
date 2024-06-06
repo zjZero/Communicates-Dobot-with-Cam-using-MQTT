@@ -3,9 +3,11 @@ import time
 import json
 
 ##########Defining all call back functions###################
-global A, B, x, y
+# global A, B, x, y
 def on_connect(client,userdata,flags,rc,pro):# called when the broker responds to our connection request
     print("Connected - rc:",rc)
+
+# Thực hiện nhận và đọc dữ liệu từ cam
 def on_message(client,userdata,message):#Called when a message has been received on a topic that the client has subscirbed to.
     global FLAG
     global chat

@@ -6,6 +6,14 @@ import random
 
 ##########Defining all call back functions###################
 
+# Dữ liệu nhận từ cam
+def data():
+    A = random.randint(1, 100)
+    B = random.randint(1, 100)
+    x = random.uniform(0, 1)  # Sử dụng uniform để nhận giá trị ngẫu nhiên với phân phối đều từ 0 đến 1
+    y = random.uniform(0, 1)
+    return A, B, x, y
+
 def on_connect(client,userdata,flags,rc,pro):# called when the broker responds to our connection request
     if rc==0 :
         print("Connected - rc:",rc)
@@ -56,12 +64,7 @@ pubtop = "/chat/client1"
 FLAG = True
 
 # global A, B, x, y
-def data():
-    A = random.randint(1, 100)
-    B = random.randint(1, 100)
-    x = random.uniform(0, 1)  # Sử dụng uniform để nhận giá trị ngẫu nhiên với phân phối đều từ 0 đến 1
-    y = random.uniform(0, 1)
-    return A, B, x, y
+
 
 def publish(client):
     msg_count = 1
