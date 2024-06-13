@@ -6,11 +6,9 @@ import json
 # global A, B, x, y
 def on_connect(client,userdata,flags,rc,pro):# called when the broker responds to our connection request
     print("Connected - rc:",rc)
-
-# Thực hiện nhận và đọc dữ liệu từ cam
 def on_message(client,userdata,message):#Called when a message has been received on a topic that the client has subscirbed to.
     global FLAG
-    global chat
+    
     if str(message.topic) == subtop:
         # msg = str(message.payload.decode("utf-8"))
         msg = json.loads(message.payload)
@@ -23,9 +21,12 @@ def on_message(client,userdata,message):#Called when a message has been received
         print('Góc Beta :', B)
         print('Tọa độ x :', x)
         print('Tọa độ y :', y)
-        if msg == "Stop" or msg == "stop":
+        print('\n')
+        time.sleep(3)
+        if msg == "Stop":
             FLAG = False
-
+        chat = "        Đã thực hiện xong"
+        client.publish(pubtop,chat)
 def on_subscribe(client, userdata,mid,granted_qos,pro):##Called when the broker responds to a subscribe request.
     print("Subscribed:", str(mid),str(granted_qos))
 def on_unsubscirbe(client,userdata,mid):# Called when broker responds to an unsubscribe request.
@@ -47,8 +48,8 @@ client.connect(broker_address,port)
 
 time.sleep(1)
 
-pubtop = "/chat/client2"
-subtop = "/chat/client1"
+pubtop = "/MQTT/DOBOT"
+subtop = "/MQTT/CAM"
 FLAG = True
 chat = None
 
