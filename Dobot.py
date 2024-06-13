@@ -7,7 +7,7 @@ import json
 def on_connect(client,userdata,flags,rc,pro):# called when the broker responds to our connection request
     print("Connected - rc:",rc)
 def on_message(client,userdata,message):#Called when a message has been received on a topic that the client has subscirbed to.
-    global FLAG
+    global FLAG, A, B, x, y
     
     if str(message.topic) == subtop:
         # msg = str(message.payload.decode("utf-8"))
@@ -17,12 +17,13 @@ def on_message(client,userdata,message):#Called when a message has been received
         B = msg['Beta']
         x = msg['x']
         y = msg['y']
-        print('Góc Alpha:', A)
-        print('Góc Beta :', B)
-        print('Tọa độ x :', x)
-        print('Tọa độ y :', y)
-        print('\n')
-        time.sleep(3)
+        # print('Góc Alpha:', A)
+        # print('Góc Beta :', B)
+        # print('Tọa độ x :', x)
+        # print('Tọa độ y :', y)
+        # print('\n')
+        # time.sleep(3)
+        Data()
         if msg == "Stop":
             FLAG = False
         chat = "        Đã thực hiện xong"
@@ -34,6 +35,13 @@ def on_unsubscirbe(client,userdata,mid):# Called when broker responds to an unsu
 def on_disconnect(client,userdata,rc):#called when the client disconnects from the broker
     if rc !=0:
         print("Unexpected Disconnection")
+def Data():
+    global A, B, x, y
+    print('Góc Alpha:', A)
+    print('Góc Beta :', B)
+    print('Tọa độ x :', x)
+    print('Tọa độ y :', y)
+    print('\n')
 
 
 broker_address = "mqtt.eclipseprojects.io" #"mqtt.eclipse.org"
