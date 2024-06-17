@@ -18,8 +18,8 @@ z = {}  # Khai báo từ điển để lưu trữ tọa độ z
 r = {}  # Khai báo từ điển để lưu trữ tọa độ r
 x_C={}
 y_C={}
-alpha=math.pi*45/180
-beta=math.pi*(45)/180
+# alpha=math.pi*45/180
+# beta=math.pi*(45)/180
 
 #ham ket noi port
 def setup_robot(port):
@@ -46,7 +46,7 @@ def toa_do():
 #########################
 
 # Tính độ dài cạnh AB
-def find_point_c():
+def find_point_c(alpha, beta):
     #tinh do dai canh AB
     length_abs = np.sqrt((x[2] - x[1])**2 + (y[2] - y[1])**2)
     print(f'length_abs{length_abs}')
@@ -100,7 +100,7 @@ def Move_to_E(_device):
     
     _id=_device.move_to(160, 131, 80, _R)
     _device.wait_for_cmd(_id)
-    
+    _device.grip(enable)
     _id=_device.move_to(_X, _Y, 80, _R)
     _device.wait_for_cmd(_id)
     

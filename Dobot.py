@@ -1,7 +1,7 @@
 import paho.mqtt.client as mqtt
 import time
 import json
-
+from Dobot_Magician import find_point_c, device, toa_do, setup_robot, PORT, Move_to_E
 ##########Defining all call back functions###################
 
 
@@ -15,23 +15,33 @@ def on_message(client,userdata,message):#Called when a message has been received
         # msg = str(message.payload.decode("utf-8"))
         msg = json.loads(message.payload)
         print(str(message.topic),msg)
-        # A = msg['Alpha']
-        # B = msg['Beta']
-        # x = msg['x']
-        # y = msg['y']
-        # A, B, x, y = data()
+        A = msg['Alpha']
+        B = msg['Beta']
+        x = msg['x']
+        y = msg['y']
+
+        if x == 1:
+            print('Góc Alpha:', A)
+            print('Góc Beta :', B)
+            print('Tọa độ x :', x)
+            find_point_c(A, B)
+            Move_to_E(device)
+            time.sleep(2)
+            x = 0;      
+            client.publish(pubtop,x)    
+        
+        else:
+            chat = " Gửi lại thông số tọa độ"
+            client.publish(pubtop,chat)
         # print('Góc Alpha:', A)
         # print('Góc Beta :', B)
         # print('Tọa độ x :', x)
         # print('Tọa độ y :', y)
         # print('\n')
-
-        time.sleep()
-        if msg == "Stop":
-            FLAG = False
-        else:
-            chat = "        Đã thực hiện xong"
-            client.publish(pubtop,chat)
+        
+        # else:
+        #     chat = "        Đã thực hiện xong"
+        #     client.publish(pubtop,chat)
         
 def on_subscribe(client, userdata,mid,granted_qos,pro):##Called when the broker responds to a subscribe request.
     print("Subscribed:", str(mid),str(granted_qos))
@@ -41,13 +51,6 @@ def on_disconnect(client,userdata,rc):#called when the client disconnects from t
     if rc !=0:
         print("Unexpected Disconnection")
 
-def data():
-    global msg
-    A = msg['Alpha']
-    B = msg['Beta']
-    x = msg['x']
-    y = msg['y']
-    return A, B, x, y
 
 broker_address = "mqtt.eclipseprojects.io" #"mqtt.eclipse.org"
 port = 1883
@@ -67,20 +70,10 @@ FLAG = True
 chat = None
 msg = None
 def run():
-    global msg, A, B, x, y
+    # global msg, A, B, x, y
     client.loop_start()
     # Data() 
     client.subscribe(subtop)
-    A = msg['Alpha']
-    B = msg['Beta']
-    x = msg['x']
-    y = msg['y']
-    # A, B, x, y = data()
-    # print('Góc Alpha:', A)
-    # print('Góc Beta :', B)
-    # print('Tọa độ x :', x)
-    # print('Tọa độ y :', y)
-    print('\n')
     time.sleep(1)
     while True: 
         if FLAG == False:
@@ -89,5 +82,9 @@ def run():
     client.loop_stop()
     return A, B
 if __name__ == '__main__':
+    device = setup_robot(PORT)
+    toa_do()
+    for i in range(1, 5):  # Sử dụng range để tạo vòng lặp từ 1 đến 4
+        print(f'toa do diem {i}x:{x[i]}, y:{y[i]}, z:{z[i]}')
     run()
     
