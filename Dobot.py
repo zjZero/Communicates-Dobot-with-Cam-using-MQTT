@@ -3,31 +3,36 @@ import time
 import json
 
 ##########Defining all call back functions###################
-# global A, B, x, y
+
+
+# printed_once = False
 def on_connect(client,userdata,flags,rc,pro):# called when the broker responds to our connection request
     print("Connected - rc:",rc)
 def on_message(client,userdata,message):#Called when a message has been received on a topic that the client has subscirbed to.
-    global FLAG, A, B, x, y
+    global msg
     
     if str(message.topic) == subtop:
         # msg = str(message.payload.decode("utf-8"))
         msg = json.loads(message.payload)
         print(str(message.topic),msg)
-        A = msg['Alpha']
-        B = msg['Beta']
-        x = msg['x']
-        y = msg['y']
+        # A = msg['Alpha']
+        # B = msg['Beta']
+        # x = msg['x']
+        # y = msg['y']
+        # A, B, x, y = data()
         # print('Góc Alpha:', A)
         # print('Góc Beta :', B)
         # print('Tọa độ x :', x)
         # print('Tọa độ y :', y)
         # print('\n')
-        # time.sleep(3)
-        Data()
+
+        time.sleep()
         if msg == "Stop":
             FLAG = False
-        chat = "        Đã thực hiện xong"
-        client.publish(pubtop,chat)
+        else:
+            chat = "        Đã thực hiện xong"
+            client.publish(pubtop,chat)
+        
 def on_subscribe(client, userdata,mid,granted_qos,pro):##Called when the broker responds to a subscribe request.
     print("Subscribed:", str(mid),str(granted_qos))
 def on_unsubscirbe(client,userdata,mid):# Called when broker responds to an unsubscribe request.
@@ -35,14 +40,14 @@ def on_unsubscirbe(client,userdata,mid):# Called when broker responds to an unsu
 def on_disconnect(client,userdata,rc):#called when the client disconnects from the broker
     if rc !=0:
         print("Unexpected Disconnection")
-def Data():
-    global A, B, x, y
-    print('Góc Alpha:', A)
-    print('Góc Beta :', B)
-    print('Tọa độ x :', x)
-    print('Tọa độ y :', y)
-    print('\n')
 
+def data():
+    global msg
+    A = msg['Alpha']
+    B = msg['Beta']
+    x = msg['x']
+    y = msg['y']
+    return A, B, x, y
 
 broker_address = "mqtt.eclipseprojects.io" #"mqtt.eclipse.org"
 port = 1883
@@ -56,20 +61,33 @@ client.connect(broker_address,port)
 
 time.sleep(1)
 
-pubtop = "/MQTT/DOBOT"
-subtop = "/MQTT/CAM"
+pubtop = "/TEST/DOBOT"
+subtop = "/TEST/CAM"
 FLAG = True
 chat = None
-
+msg = None
 def run():
+    global msg, A, B, x, y
     client.loop_start()
+    # Data() 
     client.subscribe(subtop)
-    while True:
-        if FLAG == False or chat == "Stop" or chat == "stop":
+    A = msg['Alpha']
+    B = msg['Beta']
+    x = msg['x']
+    y = msg['y']
+    # A, B, x, y = data()
+    # print('Góc Alpha:', A)
+    # print('Góc Beta :', B)
+    # print('Tọa độ x :', x)
+    # print('Tọa độ y :', y)
+    print('\n')
+    time.sleep(1)
+    while True: 
+        if FLAG == False:
             break
     client.disconnect()
     client.loop_stop()
-
+    return A, B
 if __name__ == '__main__':
     run()
     
